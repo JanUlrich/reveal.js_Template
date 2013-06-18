@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js - Presentation Template</title>
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/haefele.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+		
+		<style type="text/css">
+
+
+		.reveal .controls {
+		    bottom: 15%;
+		    z-index: 1;
+		}
+
+		.reveal section img {
+			width: 100%;
+			height: 100%
+		}
+
+		div.headR {
+			    top: 1%;
+			    display: block;
+			    position: absolute;
+			    right: 1%;
+			    z-index: 1;
+			    width: 15%;
+			    height: 15%;
+			    direction: rtl;
+		}
+		div.headL {
+			    top: 1%;
+			    display: block;
+			    position: absolute;
+			    left: 1%;
+			    z-index: 1;
+			    width: 15%;
+			    height: 15%;
+		}
+		div.footL {
+			    bottom: 1%;
+			    display: block;
+			    position: absolute;
+			    left: 1%;
+			    z-index: 30;
+			    width: 15%;
+			    height: 15%;
+			    text-align: left;
+		}
+		div.footR {
+			    bottom: 1%;
+			    display: block;
+			    position: absolute;
+			    right: 1%;
+			    z-index: 30;
+			    width: 15%;
+			    height: 15%;
+			    direction: rtl;
+		}
+		
+		div.headC {
+			    top: 1%;
+			    display: block;
+			    position: absolute;
+			    left: 40%;
+			    z-index: 30;
+			    width: 20%;
+			    height: 10%;
+	    		text-align: center;
+		}
+		
+		div.footC {
+			    bottom: 1%;
+			    display: block;
+			    position: absolute;
+			    left: 40%;
+			    z-index: 30;
+			    width: 20%;
+			    height: 10%;
+	    		text-align: center;
+		}
+		
+		footnote {    
+			display: inline-block;
+    		font-size: 0.6em;
+	    	line-height: 1.2em;
+		    vertical-align: text-bottom;
+		    position: absolute; bottom: 0;
+		}
+		
+		div.slide-chapter {
+			display: inline-block;
+    		font-size: 0.7em;
+    		font-weight: bold;
+	    	line-height: 1.2em;
+		    vertical-align: top;
+		    position: absolute; top: 0;
+		    width: 100%;
+		    left: 0;
+		}
+		
+		div.slide-title {
+			display: inline-block;
+    		font-size: 0.7em;
+    		font-weight: bold;
+	    	line-height: 1.2em;
+		    vertical-align: bottom;
+		    position: absolute; bottom: 0;
+		    width: 100%;
+		    left: 0;
+		}
+		
+		.titlePage {
+			text-align: center;
+		}
+		
+		</style>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+<div class="staticElements">
+	<div class="headR">
+	<img src="img/dh-Logo.png"></img>
+	</div>
+	<div class="headL">
+	<img src="img/rheadLogo.png"></img>
+	</div>
+	
+	
+	<div class="headC"><div class="slide-chapter">test</div></div>
+	<div class="footC"><div class="slide-title">test</div></div>
+	
+	<div class="footL">
+	<footnote>JanUlrich</footnote>
+	</div>
+	<div class="footR">
+	<footnote>Folie <text class="slide-number"></text></footnote>
+	</div>
+</div>
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+
+
+<!-- Titelblatt -->
+<section data-markdown data-separator="!---" data-vertical="u---" class="titlePage">
+<script type="text/template">
+# TITLE OF PRESENTATION #
+
+-----
+
+#### Subtitle: ####
+
+### Theme by JanUlrich  ###
+
+-----
+
+<footnote>credits to [reveal.js](http://hakim.se)</footnote>
+</script>
+</section>
+
+<section data-markdown data-separator="!---" data-vertical="u---">
+<script type="text/template">
+
+## Things I hate ##
+* Lists
+* Irony
+* Bad copys of gags from [the internet](http://2.media.collegehumor.cvcdn.com/18/18/c1cfb25db8ba4a27f5086776c144659f-ironic-list-of-things-i-hate-written-on-a-wall.jpg)
+
+!---
+
+## NumberedList
+1. 00
+2. 01
+3. 10
+4. 11
+
+!---
+
+## sloqɯʎs ǝƃuɐɹʇs ##
+### some text ###
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit
+
+</script>
+</section>
+
+<section data-markdown data-separator="!----" data-vertical="u----">
+<script type="text/template">
+
+## "The Headline" ##
+* Press Down-Arrow!
+* "The Headline" will stay on top!
+
+u----
+
+### Written in Markdown ###
+* slide-seperator:
+
+    `# Title 1. Slide #
+    !---
+    # Title 2. Slide #`
+
+* vertical slide-seperator:
+    `# Slide 1 #
+    u----
+    # Slide under "Slide 1" #`
+</script>
+</section>
+
+<section data-markdown data-separator="!---" data-vertical="u---">
+<script type="text/template">
+## Image ##
+![Testimage][1]
+
+  [1]: img/test.gif
+
+</script>
+</section>
+
+				
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+		<script src="js/jquery-2.0.2.min.js"></script>
+		
+		<script>
+		$(".staticElements").hide();
+		
+		Reveal.addEventListener( 'ready', function( event ) {
+		    // event.currentSlide, event.indexh, event.indexv
+			$(".slide-title").html($("h1").html()); // set the slide title Divs to the first h1 in the presentation
+		} );
+
+		// Fires each time a new slide is activated
+		Reveal.addEventListener( 'slidechanged', function( event ) {
+			$(".slide-title").html($("h1").html());
+		    // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+		    if(event.indexh>0){
+		    	var slideNumber = "";
+		    	$(".staticElements").show();
+		    	slideNumber += event.indexh;
+		    	if(event.indexv > 0)slideNumber += "."+event.indexv;
+		    	$(".slide-number").html(slideNumber);
+		    }else{
+		    	$(".staticElements").hide();
+		    }
+			if(event.indexv!=0){
+			    for(var headingNumber = 1; headingNumber < 7 ; headingNumber++){
+				    var currentChapter = $(Reveal.getSlide(event.indexh,0)).find("h"+headingNumber);
+				    if(currentChapter.length > 0){
+				    	$(".slide-chapter").html($(currentChapter[0]).html());
+				    	return;
+				    }
+			    }
+			}
+			$(".slide-chapter").html("");
+			} );
+		
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				width: 1300,
+			    height: 900,
+			    margin: 0.15,
+			    
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+			
+			
+		</script>
+
+	</body>
+</html>
