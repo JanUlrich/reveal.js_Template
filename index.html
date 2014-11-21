@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>reveal.js - Presentation Template</title>
+		<title>ANTLR - Parser Generator</title>
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -147,7 +147,7 @@
 	<img src="img/dh-Logo.png"></img>
 	</div>
 	<div class="headL">
-	<img src="img/rheadLogo.png"></img>
+	<!--<img src="img/rheadLogo.png"></img>-->
 	</div>
 	
 	
@@ -155,7 +155,7 @@
 	<div class="footC"><div class="slide-title">test</div></div>
 	
 	<div class="footL">
-	<footnote>JanUlrich</footnote>
+	<footnote>Andreas Stadelmeier</footnote>
 	</div>
 	<div class="footR">
 	<footnote>Folie <text class="slide-number"></text></footnote>
@@ -169,13 +169,13 @@
 <!-- Titelblatt -->
 <section data-markdown data-separator="!---" data-vertical="u---" class="titlePage">
 <script type="text/template">
-# TITLE OF PRESENTATION #
+# ANTLR - Parser Generator #
 
 -----
 
-#### Subtitle: ####
+### <b>A</b>nother <b>T</b>ool for <b>L</b>anguage <b>R</b>ecognition ###
 
-### Theme by JanUlrich  ###
+#### Vorlesung und Übungen zum praktischen Umgang mit dem ANTLR Parser Generator ####
 
 -----
 
@@ -183,54 +183,143 @@
 </script>
 </section>
 
+
 <section data-markdown data-separator="!---" data-vertical="u---">
 <script type="text/template">
 
-## Things I hate ##
-* Lists
-* Irony
-* Bad copys of gags from [the internet](http://2.media.collegehumor.cvcdn.com/18/18/c1cfb25db8ba4a27f5086776c144659f-ironic-list-of-things-i-hate-written-on-a-wall.jpg)
+## Organisatorisches ##
+* Ablauf der Volesung gliedert sich in 3 Teile:
+    1. Vorlesung
+    2. Übungsblatt (in 2er Gruppen bearbeiten)
+    3. Vorstellen/Besprechen der Ergebnisse
+* Bearbeiten der Aufgaben mit eigenem Laptop (Jede Zweiergruppe sollte einen Rechner besitzen)
 
 !---
 
-## NumberedList
-1. 00
-2. 01
-3. 10
-4. 11
+## Literatur ##
+* [Offizielle ANTLR-Website: antlr.org](http://antlr.org)
+* "The Definitive ANTLR 4 Reference" von Terence Parr, ISBN: 978-1-93435-699-9
+* "Drachenbuch"
+
+u---
+
+### Dokumenation und Hilfe im Internet ###
+* [Dokumentation auf antlr.org](https://theantlrguy.atlassian.net/wiki/display/ANTLR4/ANTLR+4+Documentation)
+* [Stackoverflow ANTLR-Tag](https://stackoverflow.com/questions/tagged/antlr)
+* [ANTLR - Google Group](https://groups.google.com/forum/#!forum/antlr-discussion)
+
 
 !---
 
-## sloqɯʎs ǝƃuɐɹʇs ##
-### some text ###
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit
+## Parser Generator ##
+* Ein Parser Generator erzeugt einen Parser aus einer Formalen Beschreibung einer Sprache
+
+* ANTLR v4:
+	* Formale Beschreibung: G4-Grammatik
+	* Erzeugter Parser: Java-Klassen
+
+u---
+
+### Vorzüge von ANTLR ###
+* Trennung von Grammatik und Verarbeitungslogik
+	* Programm verarbeitet den geparsten Syntaxbaum. Kein Java-Source Code innerhalb der Grammatik
+	* Bessere Integration des SourceCodes in die IDE
+	* Leichter anpassbar/erweiterbar
+	* Arbeiten mit bekannter Java Syntax
+
+* Eigene Entwicklungsumgebung für ANTLR Grammatiken (ANTLRWorks), sowie Plugins für gängige Java IDEs, wie Eclipse und Intellij IDEA
+	* Syntax Highlighting
+	* Code Completition
+	* und mehr: Plugin abhängig
+
+* Gute Dokumentation
+
+!---
+
+## G4-Grammatik ##
+
+## G4-Grammatik Beispiel ##
+
+	grammar Beispiel;
+	regel : Terminal1 ',' Terminal2;
+
+	Terminal1 : [A-Z]? [a-z]+;
+	Terminal2 : '0,'? [0-9]+ | Linefeed;
+
+	Linefeed: '\r'? '\n'; //'\r' für Windows linefeed
+	WS : [ \t]+ -> skip; //Überspringen aller Leerzeichen
+
+u---
+
+## Syntax ##
+* Comments sind gleich wie in Java (/**/ //)
+* Tokens/Terminale beginnen mit Großbuchstaben, Non-Terminale mit Kleinbuchstaben
+* Literale in Single-Quotes ('literal')
+* Regeln bestehen aus Namen für Token, Literale und den Zeichen ( | , * , + , ? ) 
+	* | entspricht "Oder"
+	* *, + , ? , . verhalten sich wie bei Regulären Ausdrücken
+
+u---
+
+## Hinweise ##
+* Keine separate Datei für Lexeme notwendig. Alle Regeln und Lexeme werden in der G4-Grammatik beschrieben.
+* Der Lexer nimmt immer das erste in der Grammatik auftauchende Lexem. Allgemeinere Terminale also ans Ende der Grammatik verlegen.
+
+
+	//Warum kann diese Grammatik "int 1" nicht parsen?
+	grammar Number;
+	number : integer | float;
+	integer : 'int ' Integer;
+	float : 'float ' Float;
+
+	Float : [0-9\.];
+	Integer : [0-9];
+
+!---
+
+## Entwicklungsumgebung ##
+[Übersicht:](http://tunnelvisionlabs.com/products/demo/antlrworks)
+
+* [ANTLR als JAR-Datei](https://theantlrguy.atlassian.net/wiki/display/ANTLR4/Getting+Started+with+ANTLR+v4) lässt sich zusammen mit jeder Entwicklungsumgebung auf jedem gängigen Betriebssystem nutzen.
+* ANTLR lässt sich per Plugin in gängige Java IDEs integrieren:
+	* [IntelliJ-Plugin](http://plugins.jetbrains.com/plugin/7358?pr=idea)
+	* [Eclipse-Plugin](https://github.com/jknack/antlr4ide)
+* [ANTLR Works IDE](http://tunnelvisionlabs.com/products/demo/antlrworks)(Netbeans)
+
+!---
+
+## Übngsblock 1 ##
+
+u---
+
+## Entwicklungsumgebung für Übungen ##
+* [Intellij IDEA](http://www.jetbrains.com/idea/download/)
+* [Intellij ANTLR Plugin](http://plugins.jetbrains.com/plugin/7358?pr=idea)
+
+!---
+
+## Parse Tree Walker ##
+* Der generierte Parser kann übergebenen Text zu einem Syntaxbaum eingelesen
+* Dieser kann anschließend mittels der von ANTLR angebotenen API durchlaufen werden.
+* Der Syntaxbaum wird dabei mittels einer Tiefensuche durchlaufen
+* Bei jedem Knoten wird die zugehörige Methode aufgerufen
+
+u---
+
+### Rule Context Object ###
+* Parser erstellt für jede Regel (Nichtterminal) eine Context-Klasse (<RegelName>Context)
+
+u---
+
+### Implementierung ###
+* Der Parser generiert einen Parse Tree aus dem eingelesenen Text
+* Dieser kann anschließend mittels eines ParseTreeListeners durchlaufen werden
+* Zur Implementierung eines ParseTreeListener sollte die Klasse BaseListener erweitert werden
 
 </script>
 </section>
 
-<section data-markdown data-separator="!----" data-vertical="u----">
-<script type="text/template">
-
-## "The Headline" ##
-* Press Down-Arrow!
-* "The Headline" will stay on top!
-
-u----
-
-### Written in Markdown ###
-* slide-seperator:
-
-    `# Title 1. Slide #
-    !---
-    # Title 2. Slide #`
-
-* vertical slide-seperator:
-    `# Slide 1 #
-    u----
-    # Slide under "Slide 1" #`
-</script>
-</section>
-
+<!--
 <section data-markdown data-separator="!---" data-vertical="u---">
 <script type="text/template">
 ## Image ##
@@ -240,7 +329,7 @@ u----
 
 </script>
 </section>
-
+-->
 				
 			</div>
 
