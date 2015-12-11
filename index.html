@@ -179,7 +179,7 @@
 
 -----
 
-<footnote>credits to [reveal.js](http://hakim.se)</footnote>
+<footnote>Andreas Stadelmeier</footnote>
 </script>
 </section>
 
@@ -230,26 +230,13 @@ u---
 * Eigene Entwicklungsumgebung für ANTLR Grammatiken (ANTLRWorks), sowie Plugins für gängige Java IDEs, wie Eclipse und Intellij IDEA
 	* Syntax Highlighting
 	* Code Completition
-	* und mehr: Plugin abhängig
 
 * Gute Dokumentation
+* Gute Fehlerausgabe
 
 !---
 
 ## G4-Grammatik ##
-
-## G4-Grammatik Beispiel ##
-
-	grammar Beispiel;
-	regel : Terminal1 ',' Terminal2;
-
-	Terminal1 : [A-Z]? [a-z]+;
-	Terminal2 : '0,'? [0-9]+ | Linefeed;
-
-	Linefeed: '\r'? '\n'; //'\r' für Windows linefeed
-	WS : [ \t]+ -> skip; //Überspringen aller Leerzeichen
-
-u---
 
 ## Syntax ##
 * Comments sind gleich wie in Java (/**/ //)
@@ -258,6 +245,35 @@ u---
 * Regeln bestehen aus Namen für Token, Literale und den Zeichen ( | , * , + , ? ) 
 	* | entspricht "Oder"
 	* *, + , ? , . verhalten sich wie bei Regulären Ausdrücken
+	* ~[A] entspricht allen 16-bit wertigen Zeichen außer 'A'
+
+u---
+
+### Syntax Veranschaulichung ###
+
+	//Name der Grammatik. Muss mit dem Dateinamen übereinstimmen
+	grammar GrammatikBeispiel; 
+	regel1 : Token1 Token2;
+	Token1 : 'Hallo';
+	Token2 : [a-z]+;
+	/*
+	Grammatik parst Texte der Form:
+
+	Hallo nameinkleinbuchstaben
+	*/
+	Linefeed: '\r'? '\n'; //'\r' für Windows linefeed
+	WS : [ \t]+ -> skip; //Überspringen aller Leerzeichen
+
+u---
+
+### G4-Grammatik Beispiel ###
+
+	grammar Beispiel2;
+	s : s '(' s ')' s
+	  | TEXT?;
+	TEXT : ~[()]+;
+
+Gibt es ein äquivalent zu dieser Grammatik als regulären Ausdruck?
 
 u---
 
@@ -275,6 +291,39 @@ u---
 	Float : [0-9\.];
 	Integer : [0-9];
 
+* Bei nicht eindeutigen Regeln wird die zuerst spezifizierte Regel bevorzugt
+* ANTLR Fehlermeldungen und Warnungen beachten
+
+u---
+
+	expr : expr '+' expr | expr '*' expr | Number;
+
+
+Baum beim Parsen von "1 &#42; 2 + 2 &#42; 3"
+
+
+![BaumFalsch][1]
+
+  [1]: img/baumFalsch.jpg
+	
+	//Bevorzugt Punkt vor Strich:
+	expr : expr '*' expr | expr '+' expr | Number;
+
+u---
+
+	//Bevorzugt Punkt vor Strich:
+	expr : expr '*' expr | expr '+' expr | Number;
+
+
+Baum beim Parsen von "1 &#42; 2 + 2 &#42; 3"
+
+
+![BaumRichtig][1]
+
+  [1]: img/baumRichtig.jpg
+	
+
+
 !---
 
 ## Entwicklungsumgebung ##
@@ -290,24 +339,24 @@ u---
 
 ## Übngsblock 1 ##
 
-u---
+### Übungsblatt 1: Aufgabe 1 und 2 ###
+[Link zum Übungsblatt: www2.ba-horb.de/~stan/übung1.pdf](http://www2.ba-horb.de/~stan/%C3%BCbung1.pdf)
 
-## Entwicklungsumgebung für Übungen ##
-* [Intellij IDEA](http://www.jetbrains.com/idea/download/)
-* [Intellij ANTLR Plugin](http://plugins.jetbrains.com/plugin/7358?pr=idea)
+[Intellij-Download](https://www.jetbrains.com/idea/download)
+
+[Anleitung zur Installation des ANTLR-Plugins](https://theantlrguy.atlassian.net/wiki/display/ANTLR4/Java+IDE+Integration)
+
+[Download der ANTLR-Java-Library](http://www.antlr.org/download/antlr-4.4-complete.jar)
+
+[Download ANTLR-Plugin für Intellij](https://plugins.jetbrains.com/plugin/download?pr=&updateId=22191)
 
 !---
 
 ## Parse Tree Walker ##
-* Der generierte Parser kann übergebenen Text zu einem Syntaxbaum eingelesen
+* Der generierte Parser liest den ihm übergebenen Text zu einem Syntaxbaum ein
 * Dieser kann anschließend mittels der von ANTLR angebotenen API durchlaufen werden.
 * Der Syntaxbaum wird dabei mittels einer Tiefensuche durchlaufen
-* Bei jedem Knoten wird die zugehörige Methode aufgerufen
-
-u---
-
-### Rule Context Object ###
-* Parser erstellt für jede Regel (Nichtterminal) eine Context-Klasse (<RegelName>Context)
+* Zu jeder Regel in der Grammatik kann eine Methode spezifiziert werden, welche beim durchlaufen des zugehörigen Knotens im Syntaxbaum aufgerufen wird
 
 u---
 
@@ -315,11 +364,170 @@ u---
 * Der Parser generiert einen Parse Tree aus dem eingelesenen Text
 * Dieser kann anschließend mittels eines ParseTreeListeners durchlaufen werden
 * Zur Implementierung eines ParseTreeListener sollte die Klasse BaseListener erweitert werden
+	* Diese Klasse verfügt über alle Methoden, welche beim Durchlaufen des Syntaxbaums aufgerufen werden.
+	* Um gewisse Knoten zu verarbeiten müssen diese Methoden überschrieben werden:
+
+
+	@Override
+    public void enter<NameDerRegel>(@NotNull MarkdownParser.DocumentContext ctx) {
+    	//...
+    }
+
+
+u---
+
+### Implementierung ###
+* Eine Instanz dieses Listeners kann anschließend einem ParseTreeWalker übergeben werden. Dieser durchläuft den Syntaxbaum und ruft die entsprechenden Methoden im Listener auf.
+* Beispiel für das Aufrufen eines ParseTreeWalkers für eine Grammatik namens 'Beispiel':
+
+
+	// Der Text wird über den Standard-Input eingelesen:
+	ANTLRInputStream input = new ANTLRInputStream(System.in);
+	// Text parsen:
+	BeispielLexer lexer = new ArrayInitLexer(input);
+	CommonTokenStream tokens = new CommonTokenStream(lexer);
+	BeispielParser parser = new ArrayInitParser(tokens);
+	ParseTree tree = parser.init(); // Das Parsen mit der Regel init beginnen
+	// ParseTreeWalker generieren, welcher die Methoden im Listener aufruft:
+	ParseTreeWalker walker = new ParseTreeWalker();
+	// Listener erstellen:
+	SelbstgeschriebenerListener listener = new SelbstgeschriebenerListener();
+	// Den Syntaxbaum durchlaufen:
+	walker.walk(listener, tree); 
+
+
+!---
+
+## Übngsblock 2 ##
+
+### Übungsblatt 1: Aufgabe 3 ###
+
+u---
+
+## Beispielimplementierungen für Aufgabe 3.b ##
+### Grammatik für Expressions (Fehlerhaft) ###
+
+	grammar IntExpression;
+	s : expr;
+
+	expr : expr ADD expr | expr MUL expr | expr ADD expr | '(' expr ')'
+	     | Number;
+
+	MUL : '*' ;
+	ADD : '+' ;
+	SUB : '-' ;
+
+	Number : [0-9]+;
+	WS : [ \t\r\n] -> skip;
+
+
+u---
+
+### Methode zum Einlesen und Parsen eines Strings aus System.in ###
+
+
+    public static void main(String[] args) throws Exception {
+        ANTLRInputStream input = new ANTLRInputStream(System.in);
+        ExpressionBeispielLexer lexer = new ExpressionBeispielLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        ExpressionBeispielParser parser = new ExpressionBeispielParser(tokens);
+        ParserRuleContext tree = parser.s(); //Parsen
+
+        ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
+        ExpressionCalculator extractor = new ExpressionCalculator();
+        walker.walk(extractor, tree); // initiate walk of tree with listener
+    }
+
+
+u---
+
+### ParseTreeListener ###
+
+	public class ExprEvaluator extends IntExpressionBaseListener{
+	    @Override
+	    public void exitS(IntExpressionParser.SContext ctx) {
+	        int result = new ExprAdapter().adapt(ctx.expr());
+	        System.out.println(result);
+	    }
+	}
+
+
+### ExprAdapter ###
+
+	class ExprAdapter{
+	    int adapt(IntExpressionParser.ExprContext ctx){
+	        if(ctx.MUL()!=null){
+	            return this.adapt(ctx.expr(0)) * this.adapt(ctx.expr(1));
+	        }else
+	        if(ctx.ADD()!=null){
+	            return this.adapt(ctx.expr(0)) + this.adapt(ctx.expr(1));
+	        }else
+	        if(ctx.Number()!=null){
+	            return Integer.parseInt(ctx.Number().toString());
+	        }
+	        return 0;
+	    }
+	}
+
+
+!---
+
+## Markdown Parser ##
+[Markdown-Syntax](http://daringfireball.net/projects/markdown/syntax)
+[Markdown-Editor: stackedit.io](https://stackedit.io/)
+
+!---
+
+## Adapter ##
+* Verarbeiten des ParseTrees mittels Adaptern
+* Für jedes Kontextobjekt im ParseTree wird ein zugehöriger Adapter implementiert
+* Jeder Adapter verarbeitet immer nur die Informationen in seinem Kontext
+* Tauchen in seinem Kontext Regeln auf, kann er diese von den zuständigen Adaptern verarbeiten lassen
+
+!---
+
+## Error Listener ##
+* Beim Parsen eines fehlerhaften Inputs, gibt der von ANTLR generierte Parser Fehlermeldungen im Standard-Output aus
+* Diese Fehler können abgefangen und durch eine eigene Fehlerausgabe verarbeitet werden
+
+u---
+
+### Implementierung eines ErrorListeners ###
+
+
+	public static class VerboseListener extends BaseErrorListener {
+		@Override
+		public void syntaxError(Recognizer<?, ?> recognizer,
+			Object offendingSymbol,
+			int line, int charPositionInLine,
+			String msg,
+			RecognitionException e)
+		{
+			// Verarbeitungslogik
+		}
+	}
+
+
+u---
+
+### Anfügen des ErrorListeners ###
+
+
+	SimpleParser parser = new SimpleParser(tokens); //Parser erstellen
+	parser.removeErrorListeners(); // Standard ErrorListener entfernen
+	parser.addErrorListener(new VerboseListener()); // eigenen Listener anfügen
+	parser.prog(); // parsen...
+
 
 </script>
 </section>
 
+
 <!--
+### Rule Context Object ###
+* Parser erstellt für jede Regel eine Context-Klasse
+* Enthält alle in dieser 
+
 <section data-markdown data-separator="!---" data-vertical="u---">
 <script type="text/template">
 ## Image ##
